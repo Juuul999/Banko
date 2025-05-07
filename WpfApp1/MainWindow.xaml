@@ -1,0 +1,45 @@
+﻿<Window x:Class="BingoTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Banko Tracker" Height="450" Width="600">
+    <StackPanel Margin="10">
+
+        <DockPanel Margin="0,0,0,5">
+            <TextBox x:Name="BoardIdTextBox"
+               Width="200"
+               ToolTip="Indtast plade-ID her" />
+            <Button Content="Tilføj plade"
+              Click="AddBoard_Click"
+              Margin="5,0,0,0"/>
+        </DockPanel>
+
+        <DockPanel Margin="0,0,0,10">
+            <TextBox x:Name="CalledNumberTextBox"
+               Width="80"
+               ToolTip="Indtast nummer 1–90"/>
+            <Button Content="Marker"
+              Click="CallNumber_Click"
+              Margin="5,0,0,0"/>
+        </DockPanel>
+
+        <DataGrid x:Name="BoardsDataGrid"
+              AutoGenerateColumns="False"
+              CanUserAddRows="False"
+              IsReadOnly="True"
+              Height="250"
+              MouseDoubleClick="BoardsDataGrid_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID"
+                            Binding="{Binding ID}"
+                            Width="*"/>
+                <DataGridTextColumn Header="Rækker"
+                            Binding="{Binding CompletedRows}"
+                            Width="Auto"/>
+                <DataGridCheckBoxColumn Header="Fuldt"
+                                Binding="{Binding FullCard}"
+                                Width="Auto"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </StackPanel>
+</Window>
