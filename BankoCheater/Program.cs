@@ -22,9 +22,11 @@ namespace BankoCheater
                 Console.WriteLine("Enter a number of tables to generate");
                 numTablesGen = Int32.Parse(Console.ReadLine());
             }
-            Console.WriteLine($"tableName {tableName} and numTables {numTablesGen}");
-
-            IWebDriver driver = new FirefoxDriver();
+            //Console.WriteLine($"tableName {tableName} and numTables {numTablesGen}");
+            
+            var options = new FirefoxOptions();
+            options.AddArguments("-headless");
+            IWebDriver driver = new FirefoxDriver(options);
             driver.Url = "https://mercantech.github.io/Banko/";
 
             IWebElement textField = driver.FindElement(By.Id("tekstboks"));
