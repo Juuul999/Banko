@@ -1,4 +1,8 @@
-﻿namespace BankoCheater
+﻿
+using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
+using static System.Net.WebRequestMethods;
+namespace BankoCheater
 {
     internal class Program
     {
@@ -6,26 +10,53 @@
 
         static void Main(string[] args)
         {
+            Dictionary<int, int[]> myTables = new Dictionary<int, int[]>();
+
+
             //SELENIUM INPUT TEST START
+            Console.WriteLine("Enter a name to generate tables");
+            string tableName = Console.ReadLine();
+            int numTablesGen = 0;
+            while ((numTablesGen < 1))
+            {
+                Console.WriteLine("Enter a number of tables to generate");
+                numTablesGen = Int32.Parse(Console.ReadLine());
+            }
+            Console.WriteLine($"tableName {tableName} and numTables {numTablesGen}");
+
+            IWebDriver driver = new FirefoxDriver();
+            driver.Url = "https://mercantech.github.io/Banko/";
+
+            IWebElement textField = driver.FindElement(By.Id("tekstboks"));
+            IWebElement generateButton = driver.FindElement(By.Id("knap")); // Brug det faktiske ID
+
+            for (int tableNum = 0; tableNum < numTablesGen; tableNum++)
+            {
+                textField.Clear();
+                textField.SendKeys($"{tableName}" + $"{tableNum}");
+                generateButton.Click();
+                System.Threading.Thread.Sleep(2); // En simpel måde at vente, brug evt. WebDriverWait for bedre kontrol
+
+                // Hent pladedata (fx rækker og ID)
+                IWebElement row1 = driver.FindElement(By.CssSelector("#p11")); // Brug det faktiske CSS-selector
+                IWebElement row2 = driver.FindElement(By.CssSelector("#p12")); 
+                IWebElement row3 = driver.FindElement(By.CssSelector("#p13")); 
+                string plateData = row1.Text + " " + row2.Text + " " + row3.Text;
+                string[] rowsCombinedString = plateData.Split(' ');
+                int[] rowsCombinedInt = Array.ConvertAll(rowsCombinedString, int.Parse);
+
+                myTables.Add(tableNum, rowsCombinedInt);
+            }
+            // Luk browseren
+            driver.Quit();
 
             //SELENIUM INPUT TEST END
-            //static test tables
-            Dictionary<int, int[]> myTables = new Dictionary<int, int[]>();
-            //test name Noah
-            //myTables[1,1] accesses table 1, value 1, i.e. 10
-            myTables.Add(1, [1, 10, 23, 45, 70, 2, 24, 35, 67, 86, 19, 57, 68, 76, 90]);
-            myTables.Add(2, [14, 21, 32, 76, 86, 6, 15, 44, 56, 66, 29, 45, 58, 79, 88]);
-            myTables.Add(3, [1, 20, 64, 70, 81, 11, 48, 54, 73, 82, 9, 15, 37, 59, 67]);
-            myTables.Add(4, [1, 30, 42, 61, 70, 24, 45, 55, 64, 85, 15, 25, 34, 47, 69]);
-            myTables.Add(5, [3, 20, 31, 52, 60, 6, 15, 21, 46, 86, 18, 25, 33, 79, 88]);
 
 
             Console.WriteLine("Number between 1 and 90 to start. QQ quits, reset resets, del deletes last number.");
 
             string bankoInput = "";
             List<int> calledNums = new List<int>();
-            bool aWinnerIsYou = false;
-            string tableName = "Noah";
 
             //Looping input until quitting; add to list calledNums if valid, then loop over tables
             do
@@ -58,7 +89,7 @@
                             }
                             Console.WriteLine();
                             //Console.WriteLine(myTables.Count);
-                            for (int iTable = 1; iTable <= myTables.Count; iTable++)
+                            for (int iTable = 0; iTable < myTables.Count; iTable++)
                             {
                                 checkTable(iTable);
                             }
@@ -107,13 +138,6 @@
                 */
             }
         }
-/*myTables.Add(1, [1, 10, 23, 45, 70, 2, 24, 35, 67, 86, 19, 57, 68, 76, 90]);
-            myTables.Add(2, [14, 21, 32, 76, 86, 6, 15, 44, 56, 66, 29, 45, 58, 79, 88]);
-            myTables.Add(3, [1, 20, 64, 70, 81, 11, 48, 54, 73, 82, 9, 15, 37, 59, 67]);
-            myTables.Add(4, [1, 30, 42, 61, 70, 24, 45, 55, 64, 85, 15, 25, 34, 47, 69]);
-            myTables.Add(5, [3, 20, 31, 52, 60, 6, 15, 21, 46, 86, 18, 25, 33, 79, 88]);
-        */    
-        
 
     }
 }
